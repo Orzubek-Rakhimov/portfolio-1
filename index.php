@@ -1,7 +1,7 @@
 <?php
 // index.php - John's Portfolio
 
-$name = "John Doe";
+$name = "John";
 $location = "Los Angeles";
 $email = "john@example.com";
 $title = "PHP / Laravel Developer";
@@ -41,12 +41,6 @@ $projects = [
         'tags' => ['Laravel', 'MySQL', 'Alpine.js'],
         'color' => '#f59e0b'
     ],
-];
-
-$socials = [
-    ['name' => 'GitHub', 'url' => '#', 'icon' => 'github'],
-    ['name' => 'LinkedIn', 'url' => '#', 'icon' => 'linkedin'],
-    ['name' => 'Twitter', 'url' => '#', 'icon' => 'twitter'],
 ];
 ?>
 <!DOCTYPE html>
@@ -185,6 +179,7 @@ $socials = [
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            text-decoration: none;
         }
 
         .nav-links {
@@ -659,7 +654,6 @@ $socials = [
             overflow: hidden;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
-            group: true;
         }
 
         .project-card:hover {
@@ -777,6 +771,13 @@ $socials = [
             background-clip: text;
         }
 
+        .contact-text {
+            color: var(--gray);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
         .contact-email {
             display: inline-flex;
             align-items: center;
@@ -871,6 +872,18 @@ $socials = [
             100% { transform: translateX(-50%); }
         }
 
+        /* Animation Classes */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .hero-visual {
@@ -916,6 +929,11 @@ $socials = [
             .floating-card {
                 display: none;
             }
+
+            .contact-email {
+                font-size: 1rem;
+                padding: 1rem 2rem;
+            }
         }
 
         /* Page Loader */
@@ -957,15 +975,21 @@ $socials = [
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             width: 0;
         }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s;
+        }
     </style>
 </head>
 <body>
     <!-- Loader -->
-    <div class="loader">
+    <div class="loader" id="loader">
         <div class="loader-content">
             <div class="loader-logo"><?= $name[0] ?>.</div>
             <div class="loader-bar">
-                <div class="loader-progress"></div>
+                <div class="loader-progress" id="loader-progress"></div>
             </div>
         </div>
     </div>
@@ -1062,7 +1086,7 @@ $socials = [
     <!-- About -->
     <section class="about" id="about">
         <div class="about-grid">
-            <div class="about-image">
+            <div class="about-image animate-on-scroll">
                 <div class="about-image-wrapper">
                     <div class="about-image-placeholder">👨💻</div>
                 </div>
@@ -1075,22 +1099,22 @@ $socials = [
                     <div class="label">Projects Done</div>
                 </div>
             </div>
-            <div class="about-content">
+            <div class="about-content animate-on-scroll">
                 <span class="section-tag">About Me</span>
                 <h3>Crafting Digital Experiences with Laravel</h3>
                 <p>Based in <?= $location ?>, I specialize in building robust, scalable web applications using Laravel and modern PHP. With a passion for clean architecture and efficient code, I transform complex problems into elegant solutions.</p>
                 <p>I believe in writing code that not only works but is maintainable, testable, and a joy to work with. Whether it's building APIs, crafting admin dashboards, or architecting entire platforms, I bring dedication and expertise to every project.</p>
                 <div class="about-stats">
                     <div class="stat">
-                        <div class="stat-number" data-count="50">0</div>
+                        <div class="stat-number">50+</div>
                         <div class="stat-label">Projects Completed</div>
                     </div>
                     <div class="stat">
-                        <div class="stat-number" data-count="30">0</div>
+                        <div class="stat-number">30+</div>
                         <div class="stat-label">Happy Clients</div>
                     </div>
                     <div class="stat">
-                        <div class="stat-number" data-count="5">0</div>
+                        <div class="stat-number">5+</div>
                         <div class="stat-label">Years Experience</div>
                     </div>
                 </div>
@@ -1106,8 +1130,8 @@ $socials = [
             <p class="section-subtitle">Technologies and tools I use to bring ideas to life</p>
         </div>
         <div class="skills-grid">
-            <?php foreach ($skills as $skill): ?>
-            <div class="skill-card">
+            <?php foreach ($skills as $index => $skill): ?>
+            <div class="skill-card animate-on-scroll" style="transition-delay: <?= $index * 0.1 ?>s;">
                 <span class="skill-icon"><?= $skill['icon'] ?></span>
                 <h4 class="skill-name"><?= $skill['name'] ?></h4>
                 <div class="skill-bar">
@@ -1130,8 +1154,8 @@ $socials = [
             <p class="section-subtitle">A selection of my recent work and side projects</p>
         </div>
         <div class="projects-grid">
-            <?php foreach ($projects as $project): ?>
-            <div class="project-card">
+            <?php foreach ($projects as $index => $project): ?>
+            <div class="project-card animate-on-scroll" style="transition-delay: <?= $index * 0.15 ?>s;">
                 <div class="project-image" style="background: <?= $project['color'] ?>20;">
                     <div class="project-image-bg">💻</div>
                     <div class="project-overlay"></div>
@@ -1158,17 +1182,17 @@ $socials = [
     <!-- Contact -->
     <section class="contact" id="contact">
         <div class="contact-content">
-            <span class="section-tag">Get in Touch</span>
-            <h2 class="contact-title">Let's Work <span class="gradient">Together</span></h2>
-            <p class="section-subtitle">Have a project in mind? Let's discuss how we can bring your ideas to life.</p>
-            <a href="mailto:<?= $email ?>" class="contact-email">
+            <span class="section-tag animate-on-scroll">Get in Touch</span>
+            <h2 class="contact-title animate-on-scroll">Let's Work <span class="gradient">Together</span></h2>
+            <p class="contact-text animate-on-scroll">Have a project in mind? Let's discuss how we can bring your ideas to life.</p>
+            <a href="mailto:<?= $email ?>" class="contact-email animate-on-scroll">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="2" y="4" width="20" height="16" rx="2"/>
                     <path d="M22 7l-10 6L2 7"/>
                 </svg>
                 <?= $email ?>
             </a>
-            <div class="socials">
+            <div class="socials animate-on-scroll">
                 <a href="#" class="social-link" aria-label="GitHub">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
@@ -1194,260 +1218,147 @@ $socials = [
     </footer>
 
     <script>
-        // Register GSAP plugins
-        gsap.registerPlugin(ScrollTrigger);
-
-        // Loader Animation
-        const loaderTl = gsap.timeline();
-        loaderTl
-            .to('.loader-progress', {
+        // Wait for DOM to load
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Loader Animation
+            const loader = document.getElementById('loader');
+            const loaderProgress = document.getElementById('loader-progress');
+            
+            gsap.to(loaderProgress, {
                 width: '100%',
-                duration: 1.5,
-                ease: 'power2.inOut'
-            })
-            .to('.loader', {
-                yPercent: -100,
-                duration: 0.8,
-                ease: 'power4.inOut'
-            })
-            .from('.hero-content > *', {
-                y: 100,
-                opacity: 0,
-                duration: 1,
-                stagger: 0.1,
-                ease: 'power3.out'
-            }, '-=0.4');
-
-        // Custom Cursor
-        const cursor = document.querySelector('.cursor');
-        const cursorDot = document.querySelector('.cursor-dot');
-
-        document.addEventListener('mousemove', (e) => {
-            gsap.to(cursor, {
-                x: e.clientX - 10,
-                y: e.clientY - 10,
-                duration: 0.3
-            });
-            gsap.to(cursorDot, {
-                x: e.clientX - 3,
-                y: e.clientY - 3,
-                duration: 0.1
-            });
-        });
-
-        // Cursor hover effects
-        document.querySelectorAll('a, button, .project-card, .skill-card').forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                gsap.to(cursor, { scale: 2, opacity: 0.5 });
-            });
-            el.addEventListener('mouseleave', () => {
-                gsap.to(cursor, { scale: 1, opacity: 1 });
-            });
-        });
-
-        // Parallax Orbs
-        document.addEventListener('mousemove', (e) => {
-            const x = (e.clientX - window.innerWidth / 2) / 50;
-            const y = (e.clientY - window.innerHeight / 2) / 50;
-            
-            gsap.to('.orb-1', { x: x * 2, y: y * 2, duration: 1 });
-            gsap.to('.orb-2', { x: -x * 1.5, y: -y * 1.5, duration: 1 });
-            gsap.to('.orb-3', { x: x, y: y, duration: 1 });
-        });
-
-        // Hero Text Animation
-        gsap.from('.hero h1 .word', {
-            y: 120,
-            opacity: 0,
-            duration: 1,
-            stagger: 0.2,
-            ease: 'power4.out',
-            delay: 2
-        });
-
-        // Section Animations
-        gsap.utils.toArray('section').forEach(section => {
-            gsap.from(section.querySelectorAll('.section-tag, .section-title, .section-subtitle'), {
-                scrollTrigger: {
-                    trigger: section,
-                    start: 'top 80%'
-                },
-                y: 60,
-                opacity: 0,
-                duration: 1,
-                stagger: 0.2,
-                ease: 'power3.out'
-            });
-        });
-
-        // About Section Animation
-        gsap.from('.about-image-wrapper', {
-            scrollTrigger: {
-                trigger: '.about',
-                start: 'top 70%'
-            },
-            x: -100,
-            opacity: 0,
-            duration: 1,
-            ease: 'power3.out'
-        });
-
-        gsap.from('.about-content', {
-            scrollTrigger: {
-                trigger: '.about',
-                start: 'top 70%'
-            },
-            x: 100,
-            opacity: 0,
-            duration: 1,
-            ease: 'power3.out'
-        });
-
-        gsap.from('.floating-card', {
-            scrollTrigger: {
-                trigger: '.about',
-                start: 'top 60%'
-            },
-            scale: 0,
-            opacity: 0,
-            duration: 0.8,
-            stagger: 0.2,
-            ease: 'back.out(1.7)'
-        });
-
-        // Stats Counter Animation
-        gsap.utils.toArray('.stat-number').forEach(stat => {
-            const target = parseInt(stat.dataset.count);
-            gsap.to(stat, {
-                scrollTrigger: {
-                    trigger: stat,
-                    start: 'top 85%'
-                },
-                innerHTML: target,
-                duration: 2,
-                snap: { innerHTML: 1 },
-                ease: 'power2.out'
-            });
-        });
-
-        // Skills Cards Animation
-        gsap.from('.skill-card', {
-            scrollTrigger: {
-                trigger: '.skills-grid',
-                start: 'top 75%'
-            },
-            y: 80,
-            opacity: 0,
-            duration: 0.8,
-            stagger: 0.15,
-            ease: 'power3.out'
-        });
-
-        // Skill Progress Bars
-        gsap.utils.toArray('.skill-progress').forEach(bar => {
-            gsap.to(bar, {
-                scrollTrigger: {
-                    trigger: bar,
-                    start: 'top 85%'
-                },
-                width: bar.dataset.progress + '%',
-                duration: 1.5,
-                ease: 'power3.out'
-            });
-        });
-
-        // Project Cards Animation
-        gsap.from('.project-card', {
-            scrollTrigger: {
-                trigger: '.projects-grid',
-                start: 'top 75%'
-            },
-            y: 100,
-            opacity: 0,
-            duration: 1,
-            stagger: 0.2,
-            ease: 'power3.out'
-        });
-
-        // Contact Section Animation
-        gsap.from('.contact-content > *', {
-            scrollTrigger: {
-                trigger: '.contact',
-                start: 'top 70%'
-            },
-            y: 60,
-            opacity: 0,
-            duration: 0.8,
-            stagger: 0.15,
-            ease: 'power3.out'
-        });
-
-        // Social Links Animation
-        gsap.from('.social-link', {
-            scrollTrigger: {
-                trigger: '.socials',
-                start: 'top 90%'
-            },
-            scale: 0,
-            opacity: 0,
-            duration: 0.5,
-            stagger: 0.1,
-            ease: 'back.out(1.7)'
-        });
-
-        // Magnetic Effect for Buttons
-        document.querySelectorAll('.btn, .social-link').forEach(btn => {
-            btn.addEventListener('mousemove', (e) => {
-                const rect = btn.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                
-                gsap.to(btn, {
-                    x: x * 0.3,
-                    y: y * 0.3,
-                    duration: 0.3
-                });
-            });
-            
-            btn.addEventListener('mouseleave', () => {
-                gsap.to(btn, {
-                    x: 0,
-                    y: 0,
-                    duration: 0.5,
-                    ease: 'elastic.out(1, 0.5)'
-                });
-            });
-        });
-
-        // Smooth Scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    gsap.to(window, {
-                        duration: 1,
-                        scrollTo: target,
-                        ease: 'power3.inOut'
+                duration: 1.2,
+                ease: 'power2.inOut',
+                onComplete: function() {
+                    gsap.to(loader, {
+                        opacity: 0,
+                        duration: 0.5,
+                        onComplete: function() {
+                            loader.classList.add('hidden');
+                            initAnimations();
+                        }
                     });
                 }
             });
-        });
 
-        // Navbar Background on Scroll
-        ScrollTrigger.create({
-            start: 'top -100',
-            end: 99999,
-            toggleClass: {
-                className: 'nav-scrolled',
-                targets: 'nav'
+            function initAnimations() {
+                // Custom Cursor
+                const cursor = document.querySelector('.cursor');
+                const cursorDot = document.querySelector('.cursor-dot');
+
+                if (cursor && cursorDot) {
+                    document.addEventListener('mousemove', (e) => {
+                        gsap.to(cursor, {
+                            x: e.clientX - 10,
+                            y: e.clientY - 10,
+                            duration: 0.3
+                        });
+                        gsap.to(cursorDot, {
+                            x: e.clientX - 3,
+                            y: e.clientY - 3,
+                            duration: 0.1
+                        });
+                    });
+
+                    document.querySelectorAll('a, button, .project-card, .skill-card').forEach(el => {
+                        el.addEventListener('mouseenter', () => {
+                            gsap.to(cursor, { scale: 2, opacity: 0.5 });
+                        });
+                        el.addEventListener('mouseleave', () => {
+                            gsap.to(cursor, { scale: 1, opacity: 1 });
+                        });
+                    });
+                }
+
+                // Parallax Orbs
+                document.addEventListener('mousemove', (e) => {
+                    const x = (e.clientX - window.innerWidth / 2) / 50;
+                    const y = (e.clientY - window.innerHeight / 2) / 50;
+                    
+                    gsap.to('.orb-1', { x: x * 2, y: y * 2, duration: 1 });
+                    gsap.to('.orb-2', { x: -x * 1.5, y: -y * 1.5, duration: 1 });
+                    gsap.to('.orb-3', { x: x, y: y, duration: 1 });
+                });
+
+                // Hero Animation
+                gsap.from('.hero-content > *', {
+                    y: 50,
+                    opacity: 0,
+                    duration: 0.8,
+                    stagger: 0.15,
+                    ease: 'power3.out'
+                });
+
+                // Intersection Observer for scroll animations
+                const observerOptions = {
+                    root: null,
+                    rootMargin: '0px',
+                    threshold: 0.1
+                };
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            
+                            // Animate skill progress bars
+                            const progressBar = entry.target.querySelector('.skill-progress');
+                            if (progressBar) {
+                                const progress = progressBar.dataset.progress;
+                                setTimeout(() => {
+                                    progressBar.style.width = progress + '%';
+                                }, 300);
+                            }
+                        }
+                    });
+                }, observerOptions);
+
+                // Observe all animate-on-scroll elements
+                document.querySelectorAll('.animate-on-scroll').forEach(el => {
+                    observer.observe(el);
+                });
+
+                // Magnetic Effect for Buttons
+                document.querySelectorAll('.btn, .social-link').forEach(btn => {
+                    btn.addEventListener('mousemove', (e) => {
+                        const rect = btn.getBoundingClientRect();
+                        const x = e.clientX - rect.left - rect.width / 2;
+                        const y = e.clientY - rect.top - rect.height / 2;
+                        
+                        gsap.to(btn, {
+                            x: x * 0.3,
+                            y: y * 0.3,
+                            duration: 0.3
+                        });
+                    });
+                    
+                    btn.addEventListener('mouseleave', () => {
+                        gsap.to(btn, {
+                            x: 0,
+                            y: 0,
+                            duration: 0.5,
+                            ease: 'elastic.out(1, 0.5)'
+                        });
+                    });
+                });
+
+                // Smooth Scroll for anchor links
+                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href');
+                        if (targetId === '#') return;
+                        
+                        const target = document.querySelector(targetId);
+                        if (target) {
+                            target.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    });
+                });
             }
-        });
-
-        // Text Reveal Animation for Hero
-        const heroLines = document.querySelectorAll('.hero h1 .line');
-        heroLines.forEach(line => {
-            line.style.overflow = 'hidden';
         });
     </script>
 </body>
